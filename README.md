@@ -1,2 +1,1 @@
-# accounts
-Demo triển khai K8S eurekaserver, accounts, gatewayserver, cards
+cap nhat test readme from desktop local 
