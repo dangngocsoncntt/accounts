@@ -1,0 +1,55 @@
+pipeline{
+	agent { label 'node1' }
+	environment{
+		DOCKER_CREDENTIALS=credentials('dangngocsoncntt-dockerhub')
+		GIT_CREDENTIALS=credentials('dangngocsoncntt-git-accounts')
+		
+	}
+    
+    stages{
+       stage('Get Code From Git'){
+            steps{
+                git branch: 'main', url: 'https://github.com/dangngocsoncntt/accounts'
+            }
+         }        
+       stage('Build'){
+            steps{
+                sh 'mvn clean package'
+            }
+         }
+        stage('Docker Build Image') {
+			steps{
+				sh ' docker build . -t dangngocsoncntt/accounts:$BUILD_NUMBER '
+			}
+        }
+		stage('Dockerhub Push Image'){
+			steps{
+				sh ''' 
+					echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin 
+					docker push dangngocsoncntt/accounts:$BUILD_NUMBER 
+				'''
+				
+			}
+		}
+		stage('Tag Image And Push'){
+			steps{
+				sh ''' 
+					sed -i "s+image: dangngocsoncntt/accounts:.*+image: dangngocsoncntt/accounts:${BUILD_NUMBER}+g" 3_accounts.yml
+					
+					git config --global user.name "dangngocsoncntt@gmail.com"
+					git config --global user.email dangngocsoncntt@gmail.com 
+					
+					git add .
+					git commit --allow-empty -m "cap nhat K8S File tu dong tu Jenkins"
+					
+					git push https://$GIT_CREDENTIALS_USR:$GIT_CREDENTIALS_PSW@github.com/dangngocsoncntt/accounts.git HEAD:main
+				'''
+			}
+		}
+    }
+	post{
+		always{
+			sh ' docker logout '
+		}
+	}
+}
