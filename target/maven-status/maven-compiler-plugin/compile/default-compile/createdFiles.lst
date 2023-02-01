@@ -1,5 +1,5 @@
-com\example\accounts\AccountsApplication.class
-com\example\accounts\repository\AccountsRepository.class
-com\example\accounts\controller\AccountsController.class
-com\example\accounts\feign\CardsFeign.class
-com\example\accounts\model\AccountsDto.class
+com/example/accounts/controller/AccountsController.class
+com/example/accounts/repository/AccountsRepository.class
+com/example/accounts/feign/CardsFeign.class
+com/example/accounts/AccountsApplication.class
+com/example/accounts/model/AccountsDto.class
