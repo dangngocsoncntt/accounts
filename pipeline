@@ -31,18 +31,24 @@ pipeline{
 				
 			}
 		}
+		stage('Get Code From Git Manifest'){
+            steps{
+                git branch: 'main', url: 'https://github.com/dangngocsoncntt/accounts-manifest'
+            }
+         }        
+		 
 		stage('Tag Image And Push'){
 			steps{
 				sh ''' 
 					sed -i "s+image: dangngocsoncntt/accounts:.*+image: dangngocsoncntt/accounts:${BUILD_NUMBER}+g" 3_accounts.yml
 					
-					git config --global user.name "dangngocsoncntt@gmail.com"
+					git config --global user.name dangngocsoncntt@gmail.com
 					git config --global user.email dangngocsoncntt@gmail.com 
 					
 					git add .
-					git commit --allow-empty -m "cap nhat K8S File tu dong tu Jenkins"
+					git commit --allow-empty -m "cap nhat K8S File tu dong tu Jenkins 10001"
 					
-					git push https://$GIT_CREDENTIALS_USR:$GIT_CREDENTIALS_PSW@github.com/dangngocsoncntt/accounts.git HEAD:main
+					git push https://$GIT_CREDENTIALS_USR:$GIT_CREDENTIALS_PSW@github.com/dangngocsoncntt/accounts-manifest.git HEAD:main
 				'''
 			}
 		}
